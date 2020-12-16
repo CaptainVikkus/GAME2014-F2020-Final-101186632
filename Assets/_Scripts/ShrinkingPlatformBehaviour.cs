@@ -32,6 +32,7 @@ public class ShrinkingPlatformBehaviour : MonoBehaviour
         {
             //Sound
             if (!shrinkAudio.isPlaying) { shrinkAudio.Play(); }
+            if (growAudio.isPlaying) { growAudio.Stop(); }
             //Shrink
             float size = shrinkSpeed * Time.deltaTime;
             transform.localScale -= new Vector3(size, size, size);
@@ -40,8 +41,15 @@ public class ShrinkingPlatformBehaviour : MonoBehaviour
             {
                 transform.localScale = Vector3.zero;
                 shrinkAudio.Stop();
+                StartCoroutine(Respawner());
             }
         }
+    }
+
+    private IEnumerator Respawner()
+    {
+        yield return new WaitForSeconds(shrinkSpeed);
+        isActive = false;
     }
 
     private void _UnShrink()
@@ -50,6 +58,7 @@ public class ShrinkingPlatformBehaviour : MonoBehaviour
         {
             //Sound
             if (!growAudio.isPlaying) { growAudio.Play(); }
+            if (shrinkAudio.isPlaying) { shrinkAudio.Stop(); }
             //Shrink
             float size = shrinkSpeed * Time.deltaTime;
             transform.localScale += new Vector3(size, size, size);
